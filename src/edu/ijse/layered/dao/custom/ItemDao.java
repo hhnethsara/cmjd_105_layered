@@ -4,10 +4,12 @@
  */
 package edu.ijse.layered.dao.custom;
 
+import edu.ijse.layered.dao.SuperDao;
+
 /**
  *
  * @author neths
  */
-public interface ItemDao {
+public interface ItemDao extends SuperDao{
     
 }

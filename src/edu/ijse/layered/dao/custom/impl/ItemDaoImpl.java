@@ -4,10 +4,12 @@
  */
 package edu.ijse.layered.dao.custom.impl;
 
+import edu.ijse.layered.dao.custom.ItemDao;
+
 /**
  *
  * @author neths
  */
-public class ItemDaoImpl {
+public class ItemDaoImpl implements ItemDao{
     
 }

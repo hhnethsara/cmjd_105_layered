@@ -4,6 +4,8 @@
  */
 package edu.ijse.layered.dao;
 
+import edu.ijse.layered.dao.custom.impl.ItemDaoImpl;
+
 /**
  *
  * @author neths
@@ -23,6 +25,7 @@ public class DaoFactory {
     public SuperDao getDao(DaoTypes type){
         switch (type) {
             case ITEM:
+                return new ItemDaoImpl();
             default:
                 return null;
                 

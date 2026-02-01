@@ -25,7 +25,7 @@ public class ItemView extends javax.swing.JFrame {
      * Creates new form ItemView
      */
     public ItemView() {
-        
+
         itemController = new ItemController();
         initComponents();
         loadTable();
@@ -265,7 +265,7 @@ public class ItemView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
-        
+        updateItem();
     }//GEN-LAST:event_btnupdateActionPerformed
 
     private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
@@ -273,7 +273,12 @@ public class ItemView extends javax.swing.JFrame {
     }//GEN-LAST:event_btndeleteActionPerformed
 
     private void itemTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemTableMouseClicked
+        try {
+            searchItem();
+        } catch (Exception ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
 
+        }
     }//GEN-LAST:event_itemTableMouseClicked
 
     /**
@@ -341,6 +346,8 @@ public class ItemView extends javax.swing.JFrame {
 
             String result = itemController.saveItem(dto);
             JOptionPane.showMessageDialog(this, result);
+            loadTable();
+            clear();
         } catch (Exception ex) {
             Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -348,10 +355,16 @@ public class ItemView extends javax.swing.JFrame {
         }
     }
 
-    
-
     private void deleteItem() {
-        String itemCode = txtItemCode.getText();
+        try {
+            String itemCode = txtItemCode.getText();
+            String result = itemController.deleteItem(itemCode);
+            JOptionPane.showMessageDialog(this, result);
+            loadTable();
+            clear();
+        } catch (Exception ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -363,12 +376,12 @@ public class ItemView extends javax.swing.JFrame {
                 public boolean isCellEditable(int row, int column) {
                     return false;
                 }
-                
+
             };
             itemTable.setModel(dtm);
             List<ItemDto> itemdtos = itemController.getAll();
-            for(ItemDto itemDto:itemdtos){
-                Object [] rawdata = {itemDto.getItemCOde(),
+            for (ItemDto itemDto : itemdtos) {
+                Object[] rawdata = {itemDto.getItemCOde(),
                     itemDto.getDescription(),
                     itemDto.getPacksize(),
                     itemDto.getUnitPrice(),
@@ -378,6 +391,55 @@ public class ItemView extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+
+    private void searchItem() throws Exception {
+        String id = (String) itemTable.getValueAt(itemTable.getSelectedRow(), 0);
+        ItemDto itemDto;
+        try {
+            itemDto = itemController.get(id);
+            if (itemDto != null) {
+                txtItemCode.setText(itemDto.getItemCOde());
+                txtDescription.setText(itemDto.getDescription());
+                txtPackSize.setText(itemDto.getPacksize());
+                txtUnitPrice.setText(Double.toString(itemDto.getUnitPrice()));
+                txtQtyOnHand.setText(Integer.toString(itemDto.getQtyOnHand()));
+            } else {
+                JOptionPane.showMessageDialog(this, "Item Not Found");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Item Fail");
+
+        }
+    }
+    
+    private void clear(){
+        txtItemCode.setText("");
+        txtDescription.setText("");
+        txtPackSize.setText("");
+        txtQtyOnHand.setText("");
+        txtUnitPrice.setText("");
+    }
+
+    private void updateItem() {
+        try {
+            ItemDto itemDto = new ItemDto(txtItemCode.getText(),
+                    txtDescription.getText(),
+                    txtPackSize.getText(),
+                    Double.parseDouble(txtUnitPrice.getText()),
+                    Integer.parseInt(txtQtyOnHand.getText()));
+
+            String result = itemController.updateItem(itemDto);
+            JOptionPane.showMessageDialog(this, result);
+            loadTable();
+            clear();
+
+        } catch (Exception ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Item Update Error");
+
         }
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public interface ItemService extends SuperService{
     String saveItem(ItemDto itemDto) throws Exception;
     String updateItem(ItemDto itemDto) throws  Exception;
-    String deleteItem(ItemDto itemDto) throws Exception;
+    String deleteItem(String ItemCode) throws Exception;
     ItemDto getItem(String ItemCode) throws Exception;
     List<ItemDto> getAll() throws Exception;
 }

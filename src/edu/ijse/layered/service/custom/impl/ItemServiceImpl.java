@@ -10,14 +10,16 @@ import edu.ijse.layered.dto.ItemDto;
 import edu.ijse.layered.entity.ItemEntity;
 import edu.ijse.layered.service.custom.ItemService;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
  * @author neths
  */
-public class ItemServiceImpl implements ItemService{
-    private ItemDao itemdao = (ItemDao) DaoFactory.getInstance().getDao(DaoFactory.DaoTypes.ITEM);
+public class ItemServiceImpl implements ItemService {
 
+    private ItemDao itemdao = (ItemDao) DaoFactory.getInstance().getDao(DaoFactory.DaoTypes.ITEM);
+    
     @Override
     public String saveItem(ItemDto itemDto) throws Exception {
         ItemEntity itemEntity = new ItemEntity(itemDto.getItemCOde(),
@@ -25,14 +27,14 @@ public class ItemServiceImpl implements ItemService{
                 itemDto.getPacksize(),
                 itemDto.getUnitPrice(),
                 itemDto.getQtyOnHand());
-        if(itemdao.add(itemEntity)){
+        if (itemdao.add(itemEntity)) {
             return "Success";
-        }else{
+        } else {
             return "Fail";
         }
         
     }
-
+    
     @Override
     public String updateItem(ItemDto itemDto) throws Exception {
         ItemEntity itemEntity = new ItemEntity(itemDto.getItemCOde(),
@@ -40,26 +42,43 @@ public class ItemServiceImpl implements ItemService{
                 itemDto.getPacksize(),
                 itemDto.getUnitPrice(),
                 itemDto.getQtyOnHand());
-        if(itemdao.update(itemEntity)){
+        if (itemdao.update(itemEntity)) {
             return "Update Success";
-        }else{
+        } else {
             return "Update Fail";
         }
     }
-
+    
     @Override
-    public String deleteItem(ItemDto itemDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String deleteItem(String itemCode) throws Exception {
+        if (itemdao.delete(itemCode)) {
+            return "Successfully Deleted";
+        } else {
+            return "Delete Fail";
+        }
     }
-
+    
     @Override
     public ItemDto getItem(String ItemCode) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ItemEntity itemEntity = itemdao.get(ItemCode);
+        return new ItemDto(itemEntity.getItemCode(),
+                itemEntity.getDescription(),
+                itemEntity.getPacksize(),
+                itemEntity.getUnitPrice(),
+                itemEntity.getQtyOnHand());
     }
-
+    
     @Override
     public List<ItemDto> getAll() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ArrayList<ItemEntity> itemEntitys = itemdao.getAll();
+        List<ItemDto> itemDtos = new ArrayList<ItemDto>();
+        for (ItemEntity itemEntity : itemEntitys) {
+            itemDtos.add(new ItemDto(itemEntity.getItemCode(),
+                    itemEntity.getDescription(),
+                    itemEntity.getPacksize(),
+                    itemEntity.getUnitPrice(),
+                    itemEntity.getQtyOnHand()));
+        }
     }
     
 }

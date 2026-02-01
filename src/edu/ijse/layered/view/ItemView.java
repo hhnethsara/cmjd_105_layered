@@ -6,10 +6,12 @@ package edu.ijse.layered.view;
 
 import edu.ijse.layered.ItemController.ItemController;
 import edu.ijse.layered.dto.ItemDto;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -23,8 +25,10 @@ public class ItemView extends javax.swing.JFrame {
      * Creates new form ItemView
      */
     public ItemView() {
+        
         itemController = new ItemController();
         initComponents();
+        loadTable();
     }
 
     /**
@@ -52,7 +56,7 @@ public class ItemView extends javax.swing.JFrame {
         btnupdate = new javax.swing.JButton();
         btndelete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        itemTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,7 +138,7 @@ public class ItemView extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        itemTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -145,7 +149,12 @@ public class ItemView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        itemTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(itemTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -256,12 +265,16 @@ public class ItemView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
-        updateItem();
+        
     }//GEN-LAST:event_btnupdateActionPerformed
 
     private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
         deleteItem();
     }//GEN-LAST:event_btndeleteActionPerformed
+
+    private void itemTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemTableMouseClicked
+
+    }//GEN-LAST:event_itemTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -302,9 +315,9 @@ public class ItemView extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btndelete;
     private javax.swing.JButton btnupdate;
+    private javax.swing.JTable itemTable;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblDesc;
     private javax.swing.JLabel lblItem;
     private javax.swing.JLabel lblPackSize;
@@ -335,27 +348,36 @@ public class ItemView extends javax.swing.JFrame {
         }
     }
 
-    private void updateItem() {
-        ItemDto dto = new ItemDto();
-        dto.setItemCOde(txtItemCode.getText());
-        dto.setDescription(txtDescription.getText());
-        dto.setPacksize(txtPackSize.getText());
-        dto.setUnitPrice(Double.parseDouble(txtUnitPrice.getText()));
-        dto.setQtyOnHand(Integer.parseInt(txtQtyOnHand.getText()));
-
-        try {
-            String result = ItemController.updateItem(dto);
-            JOptionPane.showMessageDialog(this, result);
-        } catch (Exception ex) {
-            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-
-        }
-    }
+    
 
     private void deleteItem() {
         String itemCode = txtItemCode.getText();
 
-        
+    }
+
+    private void loadTable() {
+        try {
+            String[] colums = {"Item_ID", "Description", "Pack_Size", "Unit_Price", "qty"};
+            DefaultTableModel dtm = new DefaultTableModel(colums, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+                
+            };
+            itemTable.setModel(dtm);
+            List<ItemDto> itemdtos = itemController.getAll();
+            for(ItemDto itemDto:itemdtos){
+                Object [] rawdata = {itemDto.getItemCOde(),
+                    itemDto.getDescription(),
+                    itemDto.getPacksize(),
+                    itemDto.getUnitPrice(),
+                    itemDto.getQtyOnHand()};
+                dtm.addRow(rawdata);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }
 }

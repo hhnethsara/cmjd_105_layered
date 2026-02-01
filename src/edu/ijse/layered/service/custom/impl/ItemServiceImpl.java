@@ -79,6 +79,7 @@ public class ItemServiceImpl implements ItemService {
                     itemEntity.getUnitPrice(),
                     itemEntity.getQtyOnHand()));
         }
+        return  itemDtos;
     }
     
 }

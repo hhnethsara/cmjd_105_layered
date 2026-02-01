@@ -3,6 +3,7 @@ package edu.ijse.layered.ItemController;
 import edu.ijse.layered.dto.ItemDto;
 import edu.ijse.layered.service.ServiceFactory;
 import edu.ijse.layered.service.custom.ItemService;
+import java.util.List;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -22,7 +23,17 @@ public class ItemController {
     public String saveItem(ItemDto dto) throws Exception{
         return itemService.saveItem(dto);
     }
-    public String updateItem(ItemDto dto) throws Exception {
+    public String updateItem(ItemDto dto) throws Exception{
         return itemService.updateItem(dto);
     }
+    public String deleteItem(String ItemCode) throws Exception{
+        return itemService.deleteItem(ItemCode);
+    }
+    public ItemDto get(String itemCode) throws Exception{
+        return itemService.getItem(itemCode);
+    }
+    public List<ItemDto> getAll() throws Exception{
+        return itemService.getAll();
+    }
+    
 }

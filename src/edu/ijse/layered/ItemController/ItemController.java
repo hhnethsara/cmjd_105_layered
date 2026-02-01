@@ -15,14 +15,14 @@ import edu.ijse.layered.service.custom.ItemService;
  */
 public class ItemController {
 
-    public static String updateItem(ItemDto dto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 
     private ItemService itemService = (ItemService) ServiceFactory.getInstance().getService(ServiceFactory.ServiceType.ITEM);
 
     public String saveItem(ItemDto dto) throws Exception{
         return itemService.saveItem(dto);
     }
-    
+    public String updateItem(ItemDto dto) throws Exception {
+        return itemService.updateItem(dto);
+    }
 }

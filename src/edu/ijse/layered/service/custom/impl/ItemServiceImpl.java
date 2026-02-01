@@ -35,7 +35,16 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public String updateItem(ItemDto itemDto) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ItemEntity itemEntity = new ItemEntity(itemDto.getItemCOde(),
+                itemDto.getDescription(),
+                itemDto.getPacksize(),
+                itemDto.getUnitPrice(),
+                itemDto.getQtyOnHand());
+        if(itemdao.update(itemEntity)){
+            return "Update Success";
+        }else{
+            return "Update Fail";
+        }
     }
 
     @Override
